@@ -1,0 +1,31 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>Goh-Jaeng Sampler</title>
+<style>
+:root{font-family:system-ui,'Noto Sans Thai',sans-serif;color:#f3edf3;background:#151316}*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:linear-gradient(#222025,#100f12);padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom)}header{height:58px;display:flex;align-items:center;justify-content:space-between;font-weight:850;letter-spacing:.06em}small,.hint{color:#a6a0ad}.tag{background:#49392b;color:#ffcf91;padding:5px 9px;border-radius:9px;font-size:11px}section{background:#29252b;border:1px solid #453e48;border-radius:19px;padding:16px;margin:10px 0 15px}h2{font-size:15px;margin:0 0 13px;color:#e5dbe7;display:flex;justify-content:space-between}.file{background:#1c1a1f;padding:12px;border-radius:10px;word-break:break-all;font-size:13px;min-height:42px}button{touch-action:manipulation;border:0;border-radius:12px;color:#f7f5f7;background:#4a424c;font-weight:750;padding:12px 8px;font-size:14px}button:active{filter:brightness(1.35)}.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.primary{background:#f2aa4b;color:#211407}.danger{background:#5f3440}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.pad{background:#3b3440;min-height:94px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;overflow:hidden;border:1px solid #6c596a}.pad strong{font-size:22px;color:#ffc475}.pad span{font-size:10px;max-width:100%;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;color:#dbccd9}.pad.loaded{border-color:#bd8558;background:#493932}.pad:active{background:#b57e4a}.row{display:flex;gap:10px;align-items:center;justify-content:space-between}.row button{min-width:38px}input[type=range]{width:100%;accent-color:#f1ab53}.sub{font-size:11px;color:#a9a0a8;line-height:1.5;margin:7px 0}.bpmval{font-variant-numeric:tabular-nums;min-width:77px;text-align:center;font-size:18px}.status{font-size:12px;color:#f2bf7c}.wave{margin:12px 0;height:64px;background:#1b1a1e;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:3px;overflow:hidden;padding:3px}.wave i{width:4px;flex:1;min-width:2px;background:#c48656;border-radius:2px;opacity:.85}footer{font-size:11px;text-align:center;color:#aaa2ad;padding:12px 8px 20px}@media(max-width:390px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.pad{min-height:74px}section{padding:12px}}
+</style></head><body>
+<header><span>GOH-JAENG <span style="color:#ffbb70">SAMPLER</span></span><span class="tag">ANDROID NATIVE AUDIO</span></header>
+<section><h2>MD PLAYER <span id="status" class="status">READY</span></h2><div id="mdName" class="file">เลือกไฟล์ MD</div><div class="wave" id="wave"></div><div class="controls"><button onclick="AndroidBridge.selectMd()">เลือกไฟล์</button><button class="primary" id="play" onclick="AndroidBridge.playMd()">▶ PLAY</button><button class="danger" onclick="AndroidBridge.stopMd()">■ STOP</button></div><div class="sub">เปิดเพลงจากโทรศัพท์ • Loop ต่อเนื่อง • เล่นเบื้องหลังได้</div></section>
+<section><h2>SAMPLE PAD 1–8 <span class="hint" style="font-size:11px">กดค้างเพื่อตั้งไฟล์</span></h2><div id="pads" class="grid"></div><p class="sub">แตะเพื่อเล่นเสียง • กดค้างเพื่อตั้งไฟล์ • เล่นเสียงทับกันได้สูงสุด 16 ครั้ง</p></section>
+<section><h2>CONTROL <span class="hint" style="font-size:11px">คีย์เพลงไม่เปลี่ยน</span></h2><div class="row"><strong>BPM เพลง</strong><div class="row"><button onclick="setBpm(bpm-1)">−</button><strong id="bpm" class="bpmval">120</strong><button onclick="setBpm(bpm+1)">+</button></div></div><p class="sub">BPM เป็นค่าบันทึกประกอบเพลง ยังไม่ได้เร่ง/ลดความเร็วเสียง</p><div class="row"><strong>MASTER VOLUME</strong><strong id="volLabel">100%</strong></div><input id="vol" type="range" min="0" max="100" value="100" oninput="volume(this.value)"><div class="controls" style="grid-template-columns:1fr"><button class="danger" onclick="AndroidBridge.stopAll()">STOP ALL AUDIO</button></div></section>
+<footer>Native Foreground Service • เสียงไม่ได้เล่นจาก WebView<br>เวอร์ชันเริ่มต้นสำหรับทดสอบบน Android จริง</footer>
+<script>
+let bpm=120,padNames=[],padTimers=[];
+const el=id=>document.getElementById(id);
+window.GJNative={
+ fileChosen(kind,n,name){if(kind==='md')el('mdName').textContent=name;else {padNames[n]=name;drawPads();}},
+ onPlaying(playing){el('status').textContent=playing?'PLAYING':'READY';el('play').textContent=playing?'▶ RESTART':'▶ PLAY'},
+ onError(message){el('status').textContent='ERROR';alert('Audio: '+message)}
+};
+let touchTimers={};
+function drawPads(){el('pads').innerHTML='';for(let i=0;i<8;i++){
+let b=document.createElement('button');b.className='pad'+(padNames[i]&&padNames[i]!==`PAD ${i+1}`?' loaded':'');
+b.innerHTML=`<strong>${i+1}</strong><span></span>`;b.querySelector('span').textContent=padNames[i]||`PAD ${i+1}`;
+let held=false,start=()=>{held=false;touchTimers[i]=setTimeout(()=>{held=true;AndroidBridge.selectPad(i)},650)},end=()=>{clearTimeout(touchTimers[i])};
+b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointercancel',end);
+b.addEventListener('contextmenu',e=>{e.preventDefault();held=true;end();AndroidBridge.selectPad(i)});
+b.addEventListener('click',()=>{if(!held)AndroidBridge.playPad(i);held=false});el('pads').append(b);
+}}
+function setBpm(n){bpm=Math.min(260,Math.max(40,n));el('bpm').textContent=bpm;AndroidBridge.bpm(bpm)}
+function volume(n){el('volLabel').textContent=n+'%';AndroidBridge.volume(Number(n))}
+try{let s=JSON.parse(AndroidBridge.state());padNames=s.pads;bpm=s.bpm;el('mdName').textContent=s.md;el('bpm').textContent=bpm;el('vol').value=s.volume;el('volLabel').textContent=s.volume+'%'}catch(e){}
+drawPads();let w=el('wave');for(let i=0;i<72;i++){let a=document.createElement('i');a.style.height=(12+56*Math.abs(Math.sin(i*.41)*Math.cos(i*.18)))+'%';w.append(a)}
+</script></body></html>

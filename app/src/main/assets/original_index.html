@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#171415">
+  <title>GJ-TRONIX · Wi-Fi Sampler</title>
+  <meta name="description" content="Sampler, 10-bank sequencer and performance pads matching GJ firmware version 71">
+  <link rel="stylesheet" href="/play.css?v=md-clean-cue">
+</head>
+<body>
+  <main class="app" aria-label="GJ Wi-Fi Sampler">
+    <header id="pageTitle" class="page-title">PERFORM</header>
+    <section id="transport" class="transport" aria-label="ควบคุมการเล่น">
+      <button id="playToggle" class="play">PLAY</button><button id="tapTempo" aria-label="TAP: เคาะจังหวะเพื่อตั้ง BPM">TAP</button><button id="bpmMinus">−</button>
+      <button id="bpmButton" class="bpm">120 BPM</button><button id="bpmPlus">+</button>
+      <button id="restart" aria-label="กลับไป BAR 1">|◀</button><button id="bankButton">BANK 1</button>
+    </section>
+    <section id="samplePage" class="page">
+      <label class="sample-page-picker">SAMPLE · 36 <select id="sampleTracksPage" class="track-picker" aria-label="เลือกกลุ่มช่อง SAMPLE"></select></label>
+      <div id="samplePads" class="sample-grid"></div>
+      <div class="sample-controls">
+        <button id="volMinus">−</button><button id="volButton">VOL 100%</button><button id="volPlus">+</button>
+        <button id="pitchMinus">−</button><button id="pitchButton">PITCH +0</button><button id="pitchPlus">+</button>
+        <button id="panMinus" aria-label="เลื่อน Pan ไปซ้าย">−</button><button id="panButton">PAN C</button><button id="panPlus" aria-label="เลื่อน Pan ไปขวา">+</button>
+        <button id="mixerOpen" class="blue">MIXER</button>
+      </div>
+    </section>
+    <section id="sequencePage" class="page">
+      <div id="sequencer" class="sequencer" inert></div>
+      <div class="sequence-tools"><select id="tracksPage" class="track-picker" aria-label="เลือกแทร็ก SEQUENCE"></select><button id="barPrev">‹</button><button id="barsButton">1–4/4 BARS</button><button id="barNext">›</button><button id="savePattern" class="green">SAVE</button><button type="button" id="sequenceLock" aria-label="ล็อกตารางจังหวะ" aria-pressed="true" title="กดค้างเพื่อปลดล็อก">🔒</button></div>
+    </section>
+    <section id="performPage" class="page active">
+      <div id="quickPadsLeft" class="quick-grid" role="group" aria-label="ปุ่มลัดฝั่งซ้าย"></div>
+      <div id="patternPads" class="pattern-grid"></div>
+      <div id="quickPads" class="quick-grid" role="group" aria-label="ปุ่มลัดฝั่งขวา"></div>
+    </section>
+    <section id="mdPage" class="page" aria-label="MD เปิดเพลง">
+      <div class="md-decks">
+      <article class="md-deck" data-deck="A" aria-label="Deck A">
+        <div class="md-deck-head">
+          <label class="md-load"><span aria-hidden="true">♫</span><input type="file" accept="audio/*,.wav,.mp3,.m4a,.ogg,.flac" aria-label="เลือกเพลง Deck A"></label>
+          <strong class="md-name">ยังไม่ได้เลือกเพลง</strong>
+        </div>
+        <div class="md-overview">
+          <canvas class="md-wave-overview" aria-hidden="true"></canvas>
+          <span class="md-overview-playhead" aria-hidden="true" hidden></span>
+          <label class="md-wave-seek"><input type="range" min="0" max="1000" value="0" aria-label="ตำแหน่งเพลง Deck A" disabled></label>
+        </div>
+        <div class="md-hotcues" role="group" aria-label="จุดเริ่มเพลง"></div>
+        <output class="md-time">0:00 / 0:00</output>
+        <div class="md-controls"><button type="button" class="md-play" disabled>PLAY</button><button type="button" class="md-cue" disabled>กลับต้นเพลง</button></div>
+        <label class="md-volume">VOL <input type="range" min="0" max="100" value="100" aria-label="ความดัง Deck A"></label>
+        <p class="md-status" role="status"></p>
+      </article>
+      <div class="md-center-waves" role="group" aria-label="คลื่นเสียงทั้งสองเด็ค">
+        <div class="md-detail" data-wave-deck="A"><canvas class="md-wave-detail" aria-hidden="true"></canvas></div>
+        <div class="md-detail" data-wave-deck="B"><canvas class="md-wave-detail" aria-hidden="true"></canvas></div>
+      </div>
+      <article class="md-deck" data-deck="B" aria-label="Deck B">
+        <div class="md-deck-head">
+          <label class="md-load"><span aria-hidden="true">♫</span><input type="file" accept="audio/*,.wav,.mp3,.m4a,.ogg,.flac" aria-label="เลือกเพลง Deck B"></label>
+          <strong class="md-name">ยังไม่ได้เลือกเพลง</strong>
+        </div>
+        <div class="md-overview">
+          <canvas class="md-wave-overview" aria-hidden="true"></canvas>
+          <span class="md-overview-playhead" aria-hidden="true" hidden></span>
+          <label class="md-wave-seek"><input type="range" min="0" max="1000" value="0" aria-label="ตำแหน่งเพลง Deck B" disabled></label>
+        </div>
+        <div class="md-hotcues" role="group" aria-label="จุดเริ่มเพลง"></div>
+        <output class="md-time">0:00 / 0:00</output>
+        <div class="md-controls"><button type="button" class="md-play" disabled>PLAY</button><button type="button" class="md-cue" disabled>กลับต้นเพลง</button></div>
+        <label class="md-volume">VOL <input type="range" min="0" max="100" value="100" aria-label="ความดัง Deck B"></label>
+        <p class="md-status" role="status"></p>
+      </article>
+      </div>
+      <label class="md-cross"><span>A</span><input id="mdCrossfader" type="range" min="-100" max="100" value="0" aria-label="Crossfader Deck A และ B"><span>B</span></label>
+    </section>
+    <footer class="brand-plaque"><span>GJ</span>-TRONIX <small id="wifiStatus" role="status">รอ Bluetooth MIDI</small></footer>
+  </main>
+  <button id="webMenuOpen" class="web-menu" aria-label="เมนูเว็บ">☰</button>
+  <button id="audioUnlock" class="audio-unlock">แตะเพื่อเปิดเสียง</button>
+
+  <dialog id="barDialog"><form method="dialog" class="dialog-card compact"><button type="button" id="barsPlus">+</button><div id="barsDisplay" class="display">4 BARS</div><button type="button" id="barsMinus">−</button><button type="button" id="doubleEdit">DOUBLE EDIT: OFF</button><button value="cancel" class="green">OK</button></form></dialog>
+  <dialog id="numberDialog"><form method="dialog" class="dialog-card number-card"><h2 id="numberTitle">ENTER BPM (50–200)</h2><div class="number-head"><output id="numberDisplay">120 BPM</output><button type="button" id="numberDel">DEL</button></div><div id="keypad" class="keypad"></div><div class="dialog-actions"><button value="cancel" class="danger">CANCEL</button><button id="numberOk" value="default" class="green">OK</button></div></form></dialog>
+  <dialog id="saveDialog"><form method="dialog" class="dialog-card save-card"><h2>NAME THIS PATTERN</h2><input id="patternName" maxlength="16" autocomplete="off"><div class="dialog-actions"><button value="cancel" class="danger">CANCEL</button><button id="saveOk" value="default" class="green">SAVE</button></div></form></dialog>
+  <dialog id="bankDialog"><form method="dialog" class="dialog-card bank-card"><h2 id="bankTitle">SELECT BANK / BANK BPM</h2><div id="bankGrid" class="bank-grid"></div><div id="bankSettings" class="setting-row"><button type="button" id="bankBpmToggle">BPM OFF</button><button type="button" id="bankBpmValue">120 BPM</button><button value="cancel">DONE</button></div></form></dialog>
+  <dialog id="padBpmDialog"><form method="dialog" class="dialog-card bank-card"><h2 id="padBpmTitle">BANK 1 / SELECT PAD</h2><div id="padBpmGrid" class="pad-bpm-grid"></div><div class="setting-row"><button type="button" id="padBpmToggle">BPM OFF</button><button type="button" id="padBpmValue">120 BPM</button><button value="cancel">DONE</button></div></form></dialog>
+  <dialog id="performBpmDialog"><form method="dialog" class="dialog-card perform-bpm-card"><div id="performBpmGrid" class="perform-bpm-grid"></div><div class="perform-bpm-actions"><button type="button" id="enterBpm">ENTER BPM</button><button value="cancel">CLOSE</button></div></form></dialog>
+  <dialog id="mixerDialog"><form method="dialog" class="dialog-card mixer-card"><div class="dialog-title"><h2>SAMPLE MIXER</h2><button value="cancel">DONE</button></div><select id="mixerTracksPage" class="track-picker" aria-label="เลือกกลุ่มช่อง MIXER"></select><div id="mixerChannels" class="mixer"></div></form></dialog>
+  <dialog id="webMenuDialog"><form method="dialog" class="dialog-card menu-card"><div class="dialog-title"><h2>WEB MENU</h2><button value="cancel">DONE</button></div><nav class="menu-pages" aria-label="เลือกหน้า"><button type="button" data-page="perform" class="tab active">PERFORM</button><button type="button" data-page="sample" class="tab">SAMPLE</button><button type="button" data-page="sequence" class="tab">SEQUENCE</button><button type="button" data-page="md" class="tab">MD</button></nav><button type="button" id="addQuick">+ เพิ่มปุ่ม BPM / FX</button><button type="button" id="projectOpen">PROJECT · EXPORT / IMPORT</button><button type="button" id="midiOpen">MIDI MAP</button><button type="button" id="clearPattern" class="danger">CLEAR CURRENT PATTERN</button></form></dialog>
+  <dialog id="midiDialog"><form method="dialog" class="dialog-card scroll-card"><div class="dialog-title"><h2>MIDI MAP</h2><button value="cancel">DONE</button></div><button type="button" id="midiConnect" class="orange wide-button">เชื่อมต่อ MIDI</button><p id="midiStatus">ยังไม่ได้เชื่อมต่อ</p><div id="midiMappings"></div><button type="button" id="midiClear" class="danger wide-button">ล้าง MIDI MAP ทั้งหมด</button></form></dialog>
+  <dialog id="projectDialog"><form method="dialog" class="dialog-card project-card"><div class="dialog-title"><h2>PROJECT</h2><button value="cancel">DONE</button></div><div id="projectActions"><p>ย้ายจังหวะ การตั้งค่า และไฟล์เสียงไปใช้อีกเครื่อง</p><button type="button" id="exportProject" class="green wide-button">EXPORT PROJECT</button><button type="button" id="importProject" class="orange wide-button">IMPORT PROJECT</button></div><section id="importReview" hidden><h3>ยืนยันนำเข้าโปรเจกต์</h3><p id="importFileName"></p><p id="importSummary"></p><p>ข้อมูลเดิมจะถูกแทนที่ทั้งหมด</p><div class="dialog-actions"><button type="button" id="importCancel">ยกเลิก</button><button type="button" id="importConfirm" class="green">ยืนยันนำเข้า</button></div></section><p id="projectStatus" role="status"></p></form></dialog>
+  <input id="fileInput" type="file" accept="audio/*,.wav,.mp3,.m4a,.ogg" hidden><input id="projectInput" type="file" accept="application/json,.json" hidden>
+  <dialog id="quickChoose" aria-labelledby="quickChooseTitle"><form method="dialog" class="dialog-card quick-form">
+    <h2 id="quickChooseTitle">เพิ่มปุ่ม</h2>
+    <div class="dialog-actions"><button type="button" id="chooseQuickBpm" class="blue">BPM</button><button type="button" id="chooseQuickFx" class="orange">FX</button><button>ยกเลิก</button></div>
+  </form></dialog>
+  <dialog id="quickEdit"><form id="quickForm" class="dialog-card quick-form">
+    <h2 id="quickTitle"></h2>
+    <label>ตำแหน่งปุ่ม <select id="quickPosition"><option value="left">ซ้าย</option><option value="right">ขวา</option></select></label>
+    <label id="quickNameLabel">ชื่อปุ่ม <input id="quickName" maxlength="24" autocomplete="off" placeholder="ไม่บังคับ"></label>
+    <label id="quickTempoLabel">BPM <input id="quickTempo" type="number" min="50" max="200" step="1" inputmode="numeric"></label>
+    <label id="quickFileLabel">ไฟล์เสียง <input id="quickFile" type="file" accept="audio/*,.wav,.mp3,.m4a,.ogg"></label>
+    <label id="quickVolLabel">ความดัง (%) <input id="quickVol" type="number" min="0" max="100" value="100"></label>
+    <label id="quickRepeatLabel">เมื่อกดซ้ำ <select id="quickRepeat"><option value="restart">เริ่มเสียงใหม่</option><option value="toggle">หยุดเสียง</option></select></label>
+    <p id="quickError" role="status"></p>
+    <div class="dialog-actions"><button id="quickDelete" type="button" class="danger">ลบ</button><button id="quickCancel" type="button">ยกเลิก</button><button class="green" type="submit">บันทึก</button></div>
+  </form></dialog>
+  <dialog id="padClipboardDialog"><form method="dialog" class="dialog-card quick-form">
+    <h2 id="padClipboardTitle"></h2>
+    <p id="padClipboardSource"></p>
+    <div class="dialog-actions">
+      <button type="button" id="copyPatternPad">คัดลอก Pad</button>
+      <button type="button" id="pastePatternPad" class="green">วางทับ Pad</button>
+      <button value="cancel">ปิด</button>
+    </div>
+  </form></dialog>
+  <dialog id="samplePanDialog"><form method="dialog" class="dialog-card quick-form">
+    <h2>ปรับ PAN</h2>
+    <label class="sample-pan" for="samplePan"><input id="samplePan" type="range" min="-100" max="100" step="1" value="0" aria-label="ปรับเสียงซ้าย–ขวา"><output id="samplePanValue" for="samplePan">C</output></label>
+    <div class="dialog-actions"><button type="button" id="panCenter">ตรงกลาง</button><button>เสร็จ</button></div>
+  </form></dialog>
+  <dialog id="sampleNameDialog"><form id="sampleNameForm" method="dialog" class="dialog-card quick-form">
+    <h2>ตั้งชื่อ SAMPLE</h2>
+    <label>ชื่อปุ่ม <input id="sampleNameInput" type="text" maxlength="100" autocomplete="off"></label>
+    <div class="dialog-actions"><button type="button" id="sampleUseFileName">ใช้ชื่อไฟล์</button><button type="submit" class="green">บันทึก</button><button type="button" id="sampleNameCancel">ยกเลิก</button></div>
+  </form></dialog>
+  <script src="/play.js?v=md-clean-cue" defer></script>
+</body>
+</html>
