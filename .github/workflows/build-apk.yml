@@ -24,7 +24,7 @@ jobs:
           java-version: '17'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -39,3 +39,4 @@ jobs:
         with:
           name: GohJaengSampler-APK
           path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
